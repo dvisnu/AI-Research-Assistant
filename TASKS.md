@@ -28,7 +28,7 @@
 
 ---
 
-## Phase 1 — RAG Backend 🚧 In Progress (~65%)
+## Phase 1 — RAG Backend 🚧 In Progress (~90%)
 
 ### 1.1 File Upload
 - [x] Create upload endpoint accepting PDF, DOCX, TXT, MD
@@ -43,8 +43,8 @@
 
 ### 1.3 Chunking
 - [x] Implement text splitter (RecursiveCharacterTextSplitter, 1000 tokens, 200 overlap)
-- [x] Attach metadata: page number, file name (via LangChain Document)
-- [x] Store chunks with unique chunk IDs (handled by ChromaDB)
+- [x] Attach metadata: page number, file name, document hash, chunk ID
+- [x] Store chunks with deterministic chunk IDs (`{file_hash}_{chunk_id}`)
 
 ### 1.4 Embeddings
 - [x] Integrate embedding model (HuggingFace sentence-transformers/all-MiniLM-L6-v2)
@@ -58,25 +58,33 @@
 
 ### 1.6 Retrieval
 - [x] Implement similarity search (cosine via normalized embeddings)
+- [x] Implement MMR retriever (k=5, fetch_k=50, lambda_mult=0.7)
 - [x] Return top-K chunks with metadata
 - [ ] Add metadata filtering (by document, page, etc.)
+- [ ] Add cross-encoder reranker to improve precision
 
-### 1.7 Prompt Builder
-- [ ] Construct system prompt template
-- [ ] Inject retrieved chunks as context
-- [ ] Format user question
-- [ ] Support adjustable prompt strategies
+### 1.7 Prompt Builder ✅ Done
+- [x] Construct system prompt template
+- [x] Inject retrieved chunks as context
+- [x] Format user question
+- [x] Implement Answer/Evidence/Sources/Confidence format
 
-### 1.8 LLM Integration
-- [ ] Integrate Gemini API
+### 1.8 LLM Integration ✅ Done
+- [x] Integrate Gemini API (`gemini-2.5-flash-lite`)
 - [ ] Integrate OpenAI API (as fallback)
-- [ ] Abstract LLM behind a common interface
+- [x] Abstract LLM behind `get_llm()` interface
 - [ ] Handle token limits and retries
 
-### 1.9 Citations
-- [ ] Extract source info from metadata
-- [ ] Format inline citations in response
-- [ ] Return structured citation list with answer
+### 1.9 Citations ✅ Done
+- [x] Extract source info from metadata (filename, page number)
+- [x] Format structured citations in response
+- [x] Return structured citation list with answer
+
+### 1.10 Cross-Encoder Reranker ❌ Not Yet Implemented
+- [ ] Integrate HuggingFace cross-encoder model
+- [ ] Wrap in `ContextualCompressionRetriever`
+- [ ] Wire into `ask_question()` RAG flow
+- [ ] Tune top-N reranking candidates
 
 ---
 
@@ -187,7 +195,7 @@
 - [ ] Frontend renders tokens incrementally
 
 ### 6.3 Advanced Retrieval
-- [ ] MMR (Maximum Marginal Relevance)
+- [x] MMR (Maximum Marginal Relevance) — done in `retriever_service.py`
 - [ ] Reranking (cross-encoder)
 - [ ] Contextual compression
 

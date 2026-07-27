@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### RAG Pipeline
+- Google Gemini LLM integration via `llm_service.py` — ChatGoogleGenerativeAI with `gemini-2.5-flash-lite` model
+- RAG prompt template (`rag_prompts.py`) — structured prompt with Answer/Evidence/Sources/Confidence sections
+- RAG query service (`rag_service.py`) — `ask_question()` orchestrates retriever → prompt → LLM → citations
+- Retrieval service (`retriever_service.py`) — MMR-based retriever (k=5, fetch_k=50, lambda_mult=0.7) with similarity search with scores
+
+#### Enhanced Ingestion
+- Chunking service now accepts custom metadata (`filename`, `document_hash`, `chunk_id`) for richer chunk metadata
+- Ingestion pipeline uses deterministic chunk IDs (`{file_hash}_{chunk_id}`) for idempotent indexing
+
+#### Dependencies
+- `langchain-google-genai>=4.3.2` added for Google Gemini API support
+
 #### Backend Infrastructure
 - FastAPI application scaffold with `main.py` entry point and root health-check endpoint
 - Project configuration via `app/core/config.py` — upload dir, allowed extensions, file size limits, chunking params, ChromaDB path
