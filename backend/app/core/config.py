@@ -1,4 +1,11 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+#Google API Key
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 #Upload configuration
 BASE_DIR = Path(__file__).resolve().parent.parent

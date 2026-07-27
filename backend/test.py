@@ -63,7 +63,7 @@ result = ingest_document(
 )
 
 print(result)
-'''
+
 
 from pathlib import Path
 
@@ -78,3 +78,94 @@ file = Path(
 result = ingest_document(file)
 
 print(result)
+
+
+
+from app.vectorstore.chroma import get_vectorstore
+
+db = get_vectorstore()
+
+print(
+    db.get()["ids"][:5]
+)
+
+
+from app.services.retriever_service import get_retriever
+
+
+retriever = get_retriever(
+    k=5
+)
+
+
+docs = retriever.invoke(
+    "What was the original Greek name of Paestum?"
+)
+
+
+for i, doc in enumerate(docs):
+
+    print("\n================")
+    print("Result:", i+1)
+
+    print(doc.page_content[:300])
+
+    print("\nMetadata:")
+    print(doc.metadata)
+
+    
+
+from app.services.rag_service import retrieve_context
+
+
+question = (
+    "What was the original Greek name of Paestum?"
+)
+
+
+result = retrieve_context(
+    question
+)
+
+
+print("\n========== CONTEXT ==========")
+
+print(
+    result["context"]
+)
+
+
+print("\n========== SOURCES ==========")
+
+for doc in result["documents"]:
+
+    print(
+        doc.metadata
+    )
+
+    '''
+
+from app.services.rag_service import ask_question
+
+
+question = (
+    "What was the original Greek name of Paestum?"
+)
+
+
+result = ask_question(
+    question
+)
+
+
+print("\n========== ANSWER ==========")
+
+print(
+    result["answer"]
+)
+
+
+print("\n========== SOURCES ==========")
+
+for source in result["sources"]:
+    print(source)

@@ -16,9 +16,22 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 
-def split_documents(documents: list[Document]) -> list[Document]:
+def split_documents(documents: list[Document],metadata: dict) -> list[Document]:
     """
-    Split documents into smaller chunks while preserving metadata.
+    Split documents and enrich chunk metadata.
     """
 
-    return text_splitter.split_documents(documents)
+    chunks = text_splitter.split_documents(
+        documents
+    )
+
+    for index, chunk in enumerate(chunks):
+
+        chunk.metadata.update(
+            {
+                **metadata,
+                "chunk_id": index,
+            }
+        )
+
+    return chunks

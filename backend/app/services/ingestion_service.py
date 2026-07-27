@@ -53,14 +53,25 @@ def ingest_document(file_path: Path) -> dict:
 
 
         chunks = split_documents(
-            documents
+            documents,
+            metadata={
+                "filename": file_path.name,
+                "document_hash": file_hash,
+            }
         )
 
 
         vectorstore = get_vectorstore()
 
+        chunk_ids = [
+              f"{file_hash}_{chunk.metadata['chunk_id']}"
+              for chunk in chunks
+        ]
+
+
         ids = vectorstore.add_documents(
-            chunks
+            documents=chunks,
+            ids=chunk_ids
         )
 
 
